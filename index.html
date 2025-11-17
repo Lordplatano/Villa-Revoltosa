@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Villa Revoltosa | Casa Rural en Campillos</title>
+    <!-- Incluye Tailwind CSS para el styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración personalizada de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-green': '#4CAF50', // Verde vibrante para CTA y acentos
+                        'secondary-green': '#388E3C', // Un verde más oscuro para hover
+                        'light-bg': '#f5f7f3', // Fondo muy claro
+                        'dark-text': '#333333', // Texto principal
+                        'accent-text': '#5a9b60', // Títulos y logo en verde
+                        'form-bg': 'rgba(255, 255, 255, 0.95)', // Fondo semitransparente para el formulario
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        fadeIn: 'fadeIn 0.6s ease-out',
+                        slideIn: 'slideIn 0.7s ease-out',
+                        heroFade: 'heroFade 1.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: 0, transform: 'translateY(10px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        },
+                        slideIn: {
+                            '0%': { opacity: 0, transform: 'translateX(-20px)' },
+                            '100%': { opacity: 1, transform: 'translateX(0)' },
+                        },
+                        heroFade: {
+                            '0%': { opacity: 0, transform: 'translateY(30px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Estilos específicos y base de paralaje -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+        .header-font {
+            font-family: 'Playfair Display', serif;
+        }
+        .accent-color {
+            color: #5a9b60; 
+        }
+
+        /* Estilo para el Hero Section */
+        #home-hero {
+            background-image: url('uploaded:FONDO.jpg-aad633a6-ee24-44aa-8637-8c9a4fad4ce7');
+            background-size: cover;
+            background-position: center bottom; /* Ajustado para mostrar más el paisaje */
+            height: 85vh; /* Altura para que sea una buena primera vista */
+            display: flex;
+            align-items: center;
+        }
+
+        /* Galería y Efectos */
+        .gallery-item img {
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.02);
+        }
+        .filter-btn {
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 4px 6px -1px rgba(74, 175, 80, 0.1), 0 2px 4px -2px rgba(74, 175, 80, 0.06);
+        }
+
+        /* Paralaje para Booking */
+        .parallax-section {
+            background-image: url('uploaded:FONDO.jpg-aad633a6-ee24-44aa-8637-8c9a4fad4ce7');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+    </style>
+</head>
+<body class="bg-light-bg text-dark-text min-h-screen font-sans">
+
+    <!-- Navegación Fija (Header) -->
+    <header class="sticky top-0 z-20 bg-light-bg shadow-md">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <!-- Logo y Nombre de la Villa -->
+            <div class="flex items-center space-x-2">
+                <svg class="w-6 h-6 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l-7-7-7 7m10 0v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                <a href="#" class="text-xl font-bold accent-color header-font">Villa Revoltosa</a>
+            </div>
+
+            <!-- Menú de Navegación (Desktop) -->
+            <div class="hidden md:flex space-x-6 items-center" id="desktop-nav">
+                <!-- Los botones se actualizarán con JS para cambiar la vista -->
+                <button data-view="home" class="nav-btn text-accent-color font-semibold border-b-2 border-accent-color pb-1 transition duration-150">Home</button>
+                <button data-view="rooms" class="nav-btn text-dark-text hover:text-accent-text transition duration-150">Habitaciones</button>
+                <button data-view="gallery" class="nav-btn text-dark-text hover:text-accent-text transition duration-150">Galería</button>
+                <!-- Botón de Contacto/Booking -->
+                <button data-view="contact" class="bg-primary-green text-white px-5 py-2 rounded-lg font-medium hover:bg-secondary-green transition duration-200 shadow-lg nav-btn">
+                    Reservar
+                </button>
+            </div>
+            
+            <!-- Icono de Menú para Móvil (Oculto por ahora) -->
+            <button class="md:hidden p-2 rounded-md hover:bg-gray-200">
+                <svg class="w-6 h-6 text-dark-text" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Contenedor Principal de la SPA -->
+    <div id="app-container">
+
+        <!-- 1. VISTA HOME (Inicio) -->
+        <section id="home-view" class="view-section transition duration-500">
+            <!-- Hero Section -->
+            <div id="home-hero" class="text-white relative">
+                <div class="absolute inset-0 bg-black/40"></div> <!-- Overlay oscuro para mejor legibilidad -->
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center py-20">
+                    <h1 class="header-font text-5xl sm:text-7xl font-extrabold mb-4 animate-heroFade">
+                        Villa Revoltosa
+                    </h1>
+                    <p class="text-xl sm:text-2xl font-light mb-8 animate-heroFade" style="animation-delay: 0.3s;">
+                        Tu refugio de paz en Campillos, Málaga.
+                    </p>
+                    <button data-view="contact" class="nav-btn bg-primary-green text-white px-8 py-3 rounded-xl font-bold text-lg hover:bg-secondary-green transition duration-300 shadow-xl animate-heroFade" style="animation-delay: 0.6s;">
+                        ¡Reserva Ahora!
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sección de Highlights / Servicios -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <h2 class="header-font text-3xl font-bold accent-color text-center mb-10 animate-fadeIn">
+                    Una Experiencia Inolvidable
+                </h2>
+                
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    
+                    <!-- Feature 1: Piscina y Sol -->
+                    <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 animate-slideIn">
+                        <svg class="w-10 h-10 accent-color mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l-7-7-7 7m10 0v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <h3 class="font-semibold text-xl mb-2 text-dark-text">Jardín y Piscina</h3>
+                        <p class="text-dark-text/70">Relájate en nuestra gran piscina exterior y disfruta de los amplios jardines andaluces.</p>
+                    </div>
+
+                    <!-- Feature 2: Interior Acogedor -->
+                    <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 animate-slideIn" style="animation-delay: 0.1s;">
+                        <svg class="w-10 h-10 accent-color mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        <h3 class="font-semibold text-xl mb-2 text-dark-text">Comodidad Total</h3>
+                        <p class="text-dark-text/70">Interiores amplios con aire acondicionado, WiFi y una acogedora chimenea para el invierno.</p>
+                    </div>
+
+                    <!-- Feature 3: Deportes y Relax -->
+                    <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 animate-slideIn" style="animation-delay: 0.2s;">
+                        <svg class="w-10 h-10 accent-color mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <h3 class="font-semibold text-xl mb-2 text-dark-text">Actividades</h3>
+                        <p class="text-dark-text/70">Zona de barbacoa, canasta de baloncesto y ubicación ideal para senderismo.</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12">
+                    <button data-view="rooms" class="nav-btn text-primary-green hover:text-secondary-green font-semibold transition duration-150 inline-flex items-center group">
+                        Ver Detalles y Habitaciones
+                        <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. VISTA ROOMS (Habitaciones y Espacios) -->
+        <section id="rooms-view" class="view-section hidden transition duration-500 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center mb-12">
+                <h1 class="header-font text-4xl sm:text-5xl font-extrabold accent-color mb-3 animate-fadeIn">
+                    Nuestras Estancias
+                </h1>
+                <p class="text-dark-text/80 text-lg animate-fadeIn" style="animation-delay: 0.1s;">
+                    Un hogar lejos de casa.
+                </p>
+            </div>
+
+            <div class="space-y-16">
+
+                <!-- Room 1: El Gran Salón Comedor -->
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex animate-fadeIn">
+                    <div class="md:w-1/2">
+                        <img src="uploaded:4.jpg-29d7fe48-149f-4a93-9c09-8bd94a1cb935" alt="Gran salón comedor con chimenea" class="w-full h-80 object-cover md:h-full transition duration-500 hover:scale-[1.03]"/>
+                    </div>
+                    <div class="md:w-1/2 p-8 space-y-4">
+                        <h3 class="header-font text-3xl font-bold accent-color">El Corazón de la Villa</h3>
+                        <p class="text-dark-text/80">
+                            Nuestro espacioso salón es perfecto para reuniones familiares o de amigos. Cuenta con una gran mesa de comedor, sofás cómodos y una chimenea rústica para las noches frescas.
+                        </p>
+                        <ul class="list-disc list-inside text-dark-text/80 space-y-1 pt-2 text-sm">
+                            <li>Chimenea de leña.</li>
+                            <li>Comedor para 10 personas.</li>
+                            <li>TV de pantalla plana.</li>
+                            <li>Acceso directo al patio.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Room 2: Dormitorio Principal -->
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex flex-row-reverse animate-fadeIn" style="animation-delay: 0.2s;">
+                    <div class="md:w-1/2">
+                        <img src="uploaded:6.jpg-3e19cfee-c22c-4683-9f46-11a576adc546" alt="Habitación con dos camas y butaca" class="w-full h-80 object-cover md:h-full transition duration-500 hover:scale-[1.03]"/>
+                    </div>
+                    <div class="md:w-1/2 p-8 space-y-4">
+                        <h3 class="header-font text-3xl font-bold accent-color">Dormitorios Tranquilos</h3>
+                        <p class="text-dark-text/80">
+                            Disfruta de un descanso reparador en nuestras habitaciones luminosas y acogedoras. Cada una ha sido diseñada para ofrecer la máxima paz y privacidad, con ropa de cama de alta calidad.
+                        </p>
+                        <ul class="list-disc list-inside text-dark-text/80 space-y-1 pt-2 text-sm">
+                            <li>Capacidad: 2 a 4 personas por habitación.</li>
+                            <li>Armarios empotrados.</li>
+                            <li>Aire acondicionado y calefacción.</li>
+                            <li>Vistas al exterior.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Room 3: Cocina Equipada -->
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex animate-fadeIn" style="animation-delay: 0.4s;">
+                    <div class="md:w-1/2">
+                        <img src="uploaded:cocina.jpg-47542387-0b80-4c5c-a0a9-59b1f3b18c61" alt="Cocina con barra americana y electrodomésticos blancos" class="w-full h-80 object-cover md:h-full transition duration-500 hover:scale-[1.03]"/>
+                    </div>
+                    <div class="md:w-1/2 p-8 space-y-4">
+                        <h3 class="header-font text-3xl font-bold accent-color">Cocina Completa</h3>
+                        <p class="text-dark-text/80">
+                            Prepara tus platos favoritos en nuestra cocina de estilo americano, totalmente equipada con todo lo necesario para tu estancia, incluyendo una práctica barra para desayunos.
+                        </p>
+                        <ul class="list-disc list-inside text-dark-text/80 space-y-1 pt-2 text-sm">
+                            <li>Nevera, horno, microondas.</li>
+                            <li>Utensilios de cocina completos.</li>
+                            <li>Cafetera y tostadora.</li>
+                            <li>Lavavajillas.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. VISTA GALLERY (Galería de Fotos) -->
+        <section id="gallery-view" class="view-section hidden transition duration-500 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            
+            <div class="text-center mb-12">
+                <h1 class="header-font text-4xl sm:text-5xl lg:text-6xl font-extrabold accent-color mb-3 animate-fadeIn">
+                    Galería Fotográfica
+                </h1>
+                <p class="text-dark-text/80 text-lg animate-fadeIn" style="animation-delay: 0.1s;">
+                    Explora la belleza de Villa Revoltosa desde todos los ángulos.
+                </p>
+            </div>
+
+            <!-- Barra de Filtros (Categorías) -->
+            <div class="flex flex-wrap justify-center space-x-4 mb-12 text-lg animate-fadeIn" style="animation-delay: 0.2s;">
+                <!-- Usaremos JavaScript para cambiar la categoría activa -->
+                <button id="filter-all" class="filter-btn text-accent-color font-medium border-b-2 border-accent-color pb-1 transition duration-150">
+                    Todos
+                </button>
+                <button id="filter-interiors" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
+                    Interiores
+                </button>
+                <button id="filter-exteriors" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
+                    Exteriores
+                </button>
+                <button id="filter-landscapes" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
+                    Paisajes
+                </button>
+                <button id="filter-activities" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
+                    Actividades
+                </button>
+            </div>
+
+            <!-- Cuadrícula de la Galería de Fotos -->
+            <div id="photo-gallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                
+                <!-- Fila 1 (Elementos del usuario) -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors">
+                    <img src="uploaded:4.jpg-29d7fe48-149f-4a93-9c09-8bd94a1cb935" alt="Gran salón comedor con chimenea" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors activities">
+                    <img src="uploaded:2.jpg-11cd7a04-d0fa-4edd-adf0-f18bfe12e309" alt="Fachada exterior con canastas de baloncesto y hamaca" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="landscapes">
+                    <img src="uploaded:FONDO.jpg-aad633a6-ee24-44aa-8637-c9a4fad4ce7" alt="Cielo atardecer vibrante con tonos naranjas y morados" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors">
+                    <img src="uploaded:6.jpg-3e19cfee-c22c-4683-9f46-11a576adc546" alt="Habitación con dos camas y butaca" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+
+                <!-- Fila 2 (Elementos del usuario) -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors">
+                    <img src="uploaded:1.jpg-7bb2bf9a-d366-40a9-a4d6-b872c692d875" alt="Piscina exterior de agua azul con borde de piedra" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors">
+                    <img src="uploaded:cocina.jpg-47542387-0b80-4c5c-a0a9-59b1f3b18c61" alt="Cocina con barra americana y electrodomésticos blancos" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors">
+                    <img src="uploaded:5.jpg-9e9fd53d-ad22-4757-ab19-4a0c4c21cf06" alt="Baño con ducha y azulejos en tonos verdes y beige" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors activities">
+                    <img src="uploaded:patio.jpg-268c6451-960d-4be0-b1ba-e9cd23f9ef26" alt="Gran patio exterior con zona de piscina y canastas" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+            </div>
+            
+        </section>
+
+        <!-- 4. VISTA CONTACT (Booking / Contacto) -->
+        <section id="contact-view" class="view-section hidden transition duration-500 py-16">
+            <div id="contact-section" class="parallax-section py-20">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="bg-form-bg rounded-xl shadow-2xl p-8 md:p-12 animate-fadeIn">
+                        <h2 class="header-font text-4xl font-extrabold accent-color text-center mb-4">
+                            Reserva tu Escapada
+                        </h2>
+                        <p class="text-dark-text/80 text-center mb-8">
+                            Contacta con nosotros para consultar disponibilidad y precios.
+                        </p>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                            <!-- Columna de Contacto Rápido -->
+                            <div class="lg:col-span-1 space-y-4">
+                                <h3 class="font-semibold text-lg text-accent-text">Información de Contacto</h3>
+                                <p class="text-sm text-dark-text">
+                                    Estamos disponibles para ayudarte con tu reserva.
+                                </p>
+                                
+                                <!-- Teléfono -->
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.14c-.958.484-1.939.997-2.915 1.51m2.257-3.62a1 1 0 011.02.39L14.47 16.5a1 1 0 00.948.684H19a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.14 2.257a12.016 12.016 0 01-1.51 2.915"></path></svg>
+                                    <a href="tel:+34653461083" class="text-dark-text hover:text-accent-text">+34 653 46 10 83</a>
+                                </div>
+                                
+                                <!-- Email -->
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.8 5.2a1 1 0 001.2 0L21 8m-2-3H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2z"></path></svg>
+                                    <a href="mailto:lorenacs0105201@gmail.com" class="text-dark-text hover:text-accent-text">lorenacs0105201@gmail.com</a>
+                                </div>
+
+                                <!-- Dirección -->
+                                <div class="flex items-start space-x-2 pt-4">
+                                    <svg class="w-5 h-5 accent-color flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <p class="text-sm text-dark-text leading-relaxed">
+                                        Villa Revoltosa<br>
+                                        29320 Campillos, Málaga
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Columna de Formulario (Ocupa más espacio) -->
+                            <div class="lg:col-span-2">
+                                <form action="#" method="POST" class="space-y-4">
+                                    <!-- Nombre y Email -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <input type="text" name="name" placeholder="Nombre completo" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                        <input type="email" name="email" placeholder="Correo electrónico" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                    </div>
+
+                                    <!-- Teléfono y Código Postal -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <input type="tel" name="phone" placeholder="Teléfono" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                        <input type="text" name="zipcode" placeholder="Código Postal" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                    </div>
+
+                                    <!-- Fechas de Interés (usamos inputs de fecha) -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="checkin" class="text-sm font-medium text-dark-text">Llegada</label>
+                                            <input type="date" id="checkin" name="checkin" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                        </div>
+                                        <div>
+                                            <label for="checkout" class="text-sm font-medium text-dark-text">Salida</label>
+                                            <input type="date" id="checkout" name="checkout" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Número de Personas -->
+                                    <input type="number" name="guests" placeholder="Número de personas" min="1" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+
+                                    <!-- Mensaje Adicional -->
+                                    <textarea name="message" rows="4" placeholder="¿Alguna petición especial?" class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150"></textarea>
+
+                                    <!-- Botón de Envío (Aquí iría la lógica de envío real) -->
+                                    <button type="submit" class="w-full bg-primary-green text-white px-6 py-3 rounded-lg font-bold text-lg hover:bg-secondary-green transition duration-200 shadow-xl hover:shadow-2xl">
+                                        Enviar Solicitud de Reserva
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- Fin del Contenedor Principal de la SPA -->
+
+    <!-- Footer (Parte inferior) -->
+    <footer class="bg-light-bg border-t border-gray-200 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            
+            <!-- Links del pie de página -->
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-8 text-sm mb-6 text-accent-text">
+                <a href="#" class="hover:underline">Política de Privacidad</a>
+                <a href="#" class="hover:underline">Términos de Servicio</a>
+                <a href="#" class="hover:underline">Contacto</a>
+            </div>
+
+            <!-- Copyright -->
+            <p class="text-sm text-accent-text/70">
+                © 2024 Villa Revoltosa. Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Script para la funcionalidad de la SPA, galería y efectos -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- GESTIÓN DE LA SPA (SINGLE PAGE APPLICATION) ---
+            const appContainer = document.getElementById('app-container');
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const viewSections = document.querySelectorAll('.view-section');
+
+            // Función principal para cambiar la vista
+            const switchView = (targetView) => {
+                viewSections.forEach(section => {
+                    if (section.id === `${targetView}-view`) {
+                        section.classList.remove('hidden');
+                        section.classList.add('animate-fadeIn'); // Aplica la animación al mostrar
+                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll al inicio de la vista
+                    } else {
+                        section.classList.add('hidden');
+                        section.classList.remove('animate-fadeIn');
+                    }
+                });
+
+                // Actualizar estilo del botón de navegación
+                navButtons.forEach(btn => {
+                    const btnView = btn.getAttribute('data-view');
+                    if (btnView === targetView) {
+                        btn.classList.add('text-accent-color', 'font-semibold', 'border-b-2', 'border-accent-color', 'pb-1');
+                        btn.classList.remove('text-dark-text', 'hover:text-accent-text');
+                    } else {
+                        btn.classList.remove('text-accent-color', 'font-semibold', 'border-b-2', 'border-accent-color', 'pb-1');
+                        btn.classList.add('text-dark-text', 'hover:text-accent-text');
+                    }
+                });
+            };
+
+            // Manejar clics de navegación
+            navButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const targetView = e.currentTarget.getAttribute('data-view');
+                    if (targetView) {
+                        switchView(targetView);
+                    }
+                });
+            });
+
+            // --- GESTIÓN DE LA GALERÍA (Mantenida) ---
+            const filterGallery = (category) => {
+                const gallery = document.getElementById('photo-gallery');
+                if (!gallery) return;
+
+                const items = gallery.querySelectorAll('.gallery-item');
+                items.forEach(item => {
+                    const categories = item.getAttribute('data-category').split(' ');
+                    item.classList.remove('animate-fadeIn'); 
+                    
+                    if (category === 'Todos' || categories.includes(category.toLowerCase())) {
+                        item.classList.remove('hidden');
+                        void item.offsetWidth; // Truco para forzar el reflow y reiniciar la animación
+                        item.classList.add('animate-fadeIn'); 
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            };
+
+            // Manejar los clics de los botones de filtro
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const category = e.target.textContent.trim();
+                    
+                    // Actualiza el estado activo del botón de filtro
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('text-accent-color', 'font-medium', 'border-b-2', 'border-accent-color');
+                        btn.classList.add('text-dark-text', 'hover:text-accent-color');
+                    });
+                    e.target.classList.add('text-accent-color', 'font-medium', 'border-b-2', 'border-accent-color');
+                    e.target.classList.remove('text-dark-text', 'hover:text-accent-color');
+
+                    // Aplica el filtro
+                    filterGallery(category);
+                });
+            });
+            
+            // Función para hacer scroll directo (ya no es necesaria con la SPA, pero se mantiene como backup)
+            window.scrollToContact = () => switchView('contact');
+
+            // --- INICIALIZACIÓN ---
+            // Muestra la vista 'home' por defecto al cargar
+            switchView('home'); 
+            // Asegura que el filtro de la galería esté en 'Todos' al iniciar
+            filterGallery('Todos');
+        });
+    </script>
+</body>
+</html>
