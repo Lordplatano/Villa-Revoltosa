@@ -16,8 +16,9 @@
                         'secondary-green': '#388E3C', // Un verde más oscuro para hover
                         'light-bg': '#f5f7f3', // Fondo muy claro
                         'dark-text': '#333333', // Texto principal
-                        'accent-text': '#5a9b60', // Títulos y logo en verde
+                        'accent-color': '#5a9b60', // Títulos y logo en verde
                         'form-bg': 'rgba(255, 255, 255, 0.95)', // Fondo semitransparente para el formulario
+                        'overlay-dark': 'rgba(0, 0, 0, 0.9)', // Fondo oscuro para Lightbox
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -26,6 +27,7 @@
                         fadeIn: 'fadeIn 0.6s ease-out',
                         slideIn: 'slideIn 0.7s ease-out',
                         heroFade: 'heroFade 1.5s ease-out',
+                        modalIn: 'modalIn 0.3s ease-out',
                     },
                     keyframes: {
                         fadeIn: {
@@ -39,6 +41,10 @@
                         heroFade: {
                             '0%': { opacity: 0, transform: 'translateY(30px)' },
                             '100%': { opacity: 1, transform: 'translateY(0)' },
+                        },
+                        modalIn: {
+                            '0%': { opacity: 0 },
+                            '100%': { opacity: 1 },
                         }
                     }
                 }
@@ -57,15 +63,18 @@
 
         /* Estilo para el Hero Section */
         #home-hero {
-            background-image: url('uploaded:FONDO.jpg-aad633a6-ee24-44aa-8637-8c9a4fad4ce7');
+            background-image: url('./Img/FONDO.jpg'); 
             background-size: cover;
-            background-position: center bottom; /* Ajustado para mostrar más el paisaje */
-            height: 85vh; /* Altura para que sea una buena primera vista */
+            background-position: center bottom; 
+            height: 85vh; 
             display: flex;
             align-items: center;
         }
 
         /* Galería y Efectos */
+        .gallery-item {
+            cursor: pointer; /* Indica que la imagen es clicable */
+        }
         .gallery-item img {
             transition: transform 0.3s ease;
         }
@@ -84,13 +93,33 @@
 
         /* Paralaje para Booking */
         .parallax-section {
-            background-image: url('uploaded:FONDO.jpg-aad633a6-ee24-44aa-8637-8c9a4fad4ce7');
+            background-image: url('./Img/FONDO.jpg');
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
         }
 
+        /* Estilo para el Lightbox (Modal de imagen) */
+        #lightbox-modal {
+            z-index: 1000;
+        }
+        .lightbox-image {
+            max-height: 90vh; /* Limita la altura de la imagen */
+            max-width: 90vw; /* Limita el ancho de la imagen */
+            object-fit: contain;
+            transition: opacity 0.3s;
+        }
+        .lightbox-arrow {
+            /* Estilo para las flechas de navegación */
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background-color 0.2s;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+        .lightbox-arrow:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
     </style>
 </head>
 <body class="bg-light-bg text-dark-text min-h-screen font-sans">
@@ -110,10 +139,10 @@
             <div class="hidden md:flex space-x-6 items-center" id="desktop-nav">
                 <!-- Los botones se actualizarán con JS para cambiar la vista -->
                 <button data-view="home" class="nav-btn text-accent-color font-semibold border-b-2 border-accent-color pb-1 transition duration-150">Home</button>
-                <button data-view="rooms" class="nav-btn text-dark-text hover:text-accent-text transition duration-150">Habitaciones</button>
-                <button data-view="gallery" class="nav-btn text-dark-text hover:text-accent-text transition duration-150">Galería</button>
+                <button data-view="rooms" class="nav-btn text-dark-text hover:text-accent-color transition duration-150">Habitaciones</button>
+                <button data-view="gallery" class="nav-btn text-dark-text hover:text-accent-color transition duration-150">Galería</button>
                 <!-- Botón de Contacto/Booking -->
-                <button data-view="contact" class="bg-primary-green text-white px-5 py-2 rounded-lg font-medium hover:bg-secondary-green transition duration-200 shadow-lg nav-btn">
+                <button data-view="contact" class="nav-btn bg-primary-green text-white px-5 py-2 rounded-lg font-medium hover:bg-secondary-green transition duration-200 shadow-lg">
                     Reservar
                 </button>
             </div>
@@ -158,7 +187,7 @@
                     
                     <!-- Feature 1: Piscina y Sol -->
                     <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 animate-slideIn">
-                        <svg class="w-10 h-10 accent-color mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l-7-7-7 7m10 0v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <svg class="w-10 h-10 accent-color mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l-7-7-7 7m10 0v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         <h3 class="font-semibold text-xl mb-2 text-dark-text">Jardín y Piscina</h3>
                         <p class="text-dark-text/70">Relájate en nuestra gran piscina exterior y disfruta de los amplios jardines andaluces.</p>
                     </div>
@@ -194,65 +223,65 @@
                     Nuestras Estancias
                 </h1>
                 <p class="text-dark-text/80 text-lg animate-fadeIn" style="animation-delay: 0.1s;">
-                    Un hogar lejos de casa.
+                    Un hogar lejos de casa, diseñado para tu confort.
                 </p>
             </div>
 
             <div class="space-y-16">
 
-                <!-- Room 1: El Gran Salón Comedor -->
+                <!-- Room 1: El Gran Salón Comedor (4.jpg) -->
                 <div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex animate-fadeIn">
                     <div class="md:w-1/2">
-                        <img src="uploaded:4.jpg-29d7fe48-149f-4a93-9c09-8bd94a1cb935" alt="Gran salón comedor con chimenea" class="w-full h-80 object-cover md:h-full transition duration-500 hover:scale-[1.03]"/>
+                        <img src="./Img/4.jpg" alt="Gran salón comedor con chimenea y mesa de madera" class="w-full h-80 object-cover md:h-full transition duration-500 hover:scale-[1.03]"/>
                     </div>
                     <div class="md:w-1/2 p-8 space-y-4">
-                        <h3 class="header-font text-3xl font-bold accent-color">El Corazón de la Villa</h3>
+                        <h3 class="header-font text-3xl font-bold accent-color">El Gran Salón</h3>
                         <p class="text-dark-text/80">
-                            Nuestro espacioso salón es perfecto para reuniones familiares o de amigos. Cuenta con una gran mesa de comedor, sofás cómodos y una chimenea rústica para las noches frescas.
+                            Nuestro espacioso salón es perfecto para reuniones familiares o de amigos. Cuenta con una gran mesa de comedor, sofás cómodos y una chimenea rústica para las noches frescas. Es el corazón social de la villa.
                         </p>
                         <ul class="list-disc list-inside text-dark-text/80 space-y-1 pt-2 text-sm">
                             <li>Chimenea de leña.</li>
                             <li>Comedor para 10 personas.</li>
-                            <li>TV de pantalla plana.</li>
-                            <li>Acceso directo al patio.</li>
+                            <li>Ventilador de techo.</li>
+                            <li>Mobiliario de almacenaje y TV.</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Room 2: Dormitorio Principal -->
+                <!-- Room 2: Dormitorio (6.jpg) -->
                 <div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex flex-row-reverse animate-fadeIn" style="animation-delay: 0.2s;">
                     <div class="md:w-1/2">
-                        <img src="uploaded:6.jpg-3e19cfee-c22c-4683-9f46-11a576adc546" alt="Habitación con dos camas y butaca" class="w-full h-80 object-cover md:h-full transition duration-500 hover:scale-[1.03]"/>
+                        <img src="./Img/6.jpg" alt="Dormitorio amplio con dos camas de matrimonio" class="w-full h-80 object-cover md:h-full transition duration-500 hover:scale-[1.03]"/>
                     </div>
                     <div class="md:w-1/2 p-8 space-y-4">
-                        <h3 class="header-font text-3xl font-bold accent-color">Dormitorios Tranquilos</h3>
+                        <h3 class="header-font text-3xl font-bold accent-color">Dormitorios Acogedores</h3>
                         <p class="text-dark-text/80">
-                            Disfruta de un descanso reparador en nuestras habitaciones luminosas y acogedoras. Cada una ha sido diseñada para ofrecer la máxima paz y privacidad, con ropa de cama de alta calidad.
+                            Disfruta de un descanso reparador en nuestras habitaciones luminosas y espaciosas. Diseñadas para la máxima paz y privacidad, con suelos de baldosas que mantienen la frescura en verano.
                         </p>
                         <ul class="list-disc list-inside text-dark-text/80 space-y-1 pt-2 text-sm">
-                            <li>Capacidad: 2 a 4 personas por habitación.</li>
-                            <li>Armarios empotrados.</li>
-                            <li>Aire acondicionado y calefacción.</li>
+                            <li>Varias configuraciones de cama.</li>
+                            <li>Espacio adicional para equipaje.</li>
+                            <li>Ventilador y buena iluminación.</li>
                             <li>Vistas al exterior.</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Room 3: Cocina Equipada -->
+                <!-- Room 3: Cocina Equipada (cocina.jpg) -->
                 <div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex animate-fadeIn" style="animation-delay: 0.4s;">
                     <div class="md:w-1/2">
-                        <img src="uploaded:cocina.jpg-47542387-0b80-4c5c-a0a9-59b1f3b18c61" alt="Cocina con barra americana y electrodomésticos blancos" class="w-full h-80 object-cover md:h-full transition duration-500 hover:scale-[1.03]"/>
+                        <img src="./Img/cocina.jpg" alt="Cocina con barra americana y nevera de doble puerta" class="w-full h-80 object-cover md:h-full transition duration-500 hover:scale-[1.03]"/>
                     </div>
                     <div class="md:w-1/2 p-8 space-y-4">
                         <h3 class="header-font text-3xl font-bold accent-color">Cocina Completa</h3>
                         <p class="text-dark-text/80">
-                            Prepara tus platos favoritos en nuestra cocina de estilo americano, totalmente equipada con todo lo necesario para tu estancia, incluyendo una práctica barra para desayunos.
+                            Prepara tus platos favoritos en nuestra cocina de estilo americano, totalmente equipada con electrodomésticos grandes y una barra con encimera de granito, ideal para el desayuno o para charlar mientras cocinas.
                         </p>
                         <ul class="list-disc list-inside text-dark-text/80 space-y-1 pt-2 text-sm">
-                            <li>Nevera, horno, microondas.</li>
-                            <li>Utensilios de cocina completos.</li>
-                            <li>Cafetera y tostadora.</li>
-                            <li>Lavavajillas.</li>
+                            <li>Nevera americana con dispensador.</li>
+                            <li>Horno y placa de cocina.</li>
+                            <li>Barra americana de granito.</li>
+                            <li>Menaje y utensilios completos.</li>
                         </ul>
                     </div>
                 </div>
@@ -274,53 +303,67 @@
 
             <!-- Barra de Filtros (Categorías) -->
             <div class="flex flex-wrap justify-center space-x-4 mb-12 text-lg animate-fadeIn" style="animation-delay: 0.2s;">
-                <!-- Usaremos JavaScript para cambiar la categoría activa -->
-                <button id="filter-all" class="filter-btn text-accent-color font-medium border-b-2 border-accent-color pb-1 transition duration-150">
+                <!-- Los botones ahora usan data-filter en minúsculas para coincidir con la lógica -->
+                <button data-filter="all" class="filter-btn text-accent-color font-medium border-b-2 border-accent-color pb-1 transition duration-150">
                     Todos
                 </button>
-                <button id="filter-interiors" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
+                <button data-filter="interiors" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
                     Interiores
                 </button>
-                <button id="filter-exteriors" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
+                <button data-filter="exteriors" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
                     Exteriores
                 </button>
-                <button id="filter-landscapes" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
-                    Paisajes
-                </button>
-                <button id="filter-activities" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
+                <button data-filter="activities" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
                     Actividades
+                </button>
+                <button data-filter="landscapes" class="filter-btn text-dark-text hover:text-accent-color transition duration-150">
+                    Paisajes
                 </button>
             </div>
 
-            <!-- Cuadrícula de la Galería de Fotos -->
+            <!-- Cuadrícula de la Galería de Fotos - RUTAS CORREGIDAS A RELATIVAS Y CAPITALIZACIÓN (./Img/) -->
             <div id="photo-gallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 
-                <!-- Fila 1 (Elementos del usuario) -->
-                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors">
-                    <img src="uploaded:4.jpg-29d7fe48-149f-4a93-9c09-8bd94a1cb935" alt="Gran salón comedor con chimenea" class="w-full h-72 object-cover rounded-xl"/>
+                <!-- Fila 1 -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors activities" data-full-image="./Img/1.jpg">
+                    <img src="./Img/1.jpg" alt="Piscina exterior de agua azul con borde de piedra" class="w-full h-72 object-cover rounded-xl"/>
                 </div>
-                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors activities">
-                    <img src="uploaded:2.jpg-11cd7a04-d0fa-4edd-adf0-f18bfe12e309" alt="Fachada exterior con canastas de baloncesto y hamaca" class="w-full h-72 object-cover rounded-xl"/>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors activities" data-full-image="./Img/2.jpg">
+                    <img src="./Img/2.jpg" alt="Fachada exterior con canastas de baloncesto y hamaca" class="w-full h-72 object-cover rounded-xl"/>
                 </div>
-                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="landscapes">
-                    <img src="uploaded:FONDO.jpg-aad633a6-ee24-44aa-8637-c9a4fad4ce7" alt="Cielo atardecer vibrante con tonos naranjas y morados" class="w-full h-72 object-cover rounded-xl"/>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors" data-full-image="./Img/3.jpg">
+                    <img src="./Img/3.jpg" alt="Cocina con barra americana y electrodomésticos blancos" class="w-full h-72 object-cover rounded-xl"/>
                 </div>
-                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors">
-                    <img src="uploaded:6.jpg-3e19cfee-c22c-4683-9f46-11a576adc546" alt="Habitación con dos camas y butaca" class="w-full h-72 object-cover rounded-xl"/>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors" data-full-image="./Img/4.jpg">
+                    <img src="./Img/4.jpg" alt="Salón Comedor con mesa grande" class="w-full h-72 object-cover rounded-xl"/>
                 </div>
 
-                <!-- Fila 2 (Elementos del usuario) -->
-                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors">
-                    <img src="uploaded:1.jpg-7bb2bf9a-d366-40a9-a4d6-b872c692d875" alt="Piscina exterior de agua azul con borde de piedra" class="w-full h-72 object-cover rounded-xl"/>
+                <!-- Fila 2 (Mix de Interiores/Exteriores) -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors" data-full-image="./Img/5.jpg">
+                    <img src="./Img/5.jpg" alt="Baño con ducha y azulejos" class="w-full h-72 object-cover rounded-xl"/>
                 </div>
-                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors">
-                    <img src="uploaded:cocina.jpg-47542387-0b80-4c5c-a0a9-59b1f3b18c61" alt="Cocina con barra americana y electrodomésticos blancos" class="w-full h-72 object-cover rounded-xl"/>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors" data-full-image="./Img/6.jpg">
+                    <img src="./Img/6.jpg" alt="Dormitorio amplio con dos camas de matrimonio" class="w-full h-72 object-cover rounded-xl"/>
                 </div>
-                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors">
-                    <img src="uploaded:5.jpg-9e9fd53d-ad22-4757-ab19-4a0c4c21cf06" alt="Baño con ducha y azulejos en tonos verdes y beige" class="w-full h-72 object-cover rounded-xl"/>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="interiors" data-full-image="./Img/7.jpg">
+                    <img src="./Img/7.jpg" alt="Dormitorio amplio con dos camas de matrimonio (otra vista)" class="w-full h-72 object-cover rounded-xl"/>
                 </div>
-                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors activities">
-                    <img src="uploaded:patio.jpg-268c6451-960d-4be0-b1ba-e9cd23f9ef26" alt="Gran patio exterior con zona de piscina y canastas" class="w-full h-72 object-cover rounded-xl"/>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="landscapes" data-full-image="./Img/FONDO.jpg">
+                    <img src="./Img/FONDO.jpg" alt="Cielo atardecer vibrante con tonos naranjas y morados" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+
+                <!-- Fila 3 - Imágenes adicionales -->
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors activities" data-full-image="./Img/patio.jpg">
+                    <img src="./Img/patio.jpg" alt="Patio con piscina" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors" data-full-image="./Img/piscina1.jpg">
+                    <img src="./Img/piscina1.jpg" alt="Piscina vista desde arriba" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors" data-full-image="./Img/piscina2.jpg">
+                    <img src="./Img/piscina2.jpg" alt="Vista de la barra de la cocina" class="w-full h-72 object-cover rounded-xl"/>
+                </div>
+                <div class="gallery-item rounded-xl overflow-hidden shadow-lg animate-fadeIn" data-category="exteriors activities" data-full-image="./Img/piscina3.jpg">
+                    <img src="./Img/piscina3.jpg" alt="Piscina vista desde arriba" class="w-full h-72 object-cover rounded-xl"/>
                 </div>
             </div>
             
@@ -341,21 +384,23 @@
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                             <!-- Columna de Contacto Rápido -->
                             <div class="lg:col-span-1 space-y-4">
-                                <h3 class="font-semibold text-lg text-accent-text">Información de Contacto</h3>
+                                <h3 class="font-semibold text-lg text-accent-color">Información de Contacto</h3>
                                 <p class="text-sm text-dark-text">
                                     Estamos disponibles para ayudarte con tu reserva.
                                 </p>
                                 
-                                <!-- Teléfono -->
+                                <!-- Teléfono (AHORA CON WHATSAPP) -->
                                 <div class="flex items-center space-x-2">
                                     <svg class="w-5 h-5 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.14c-.958.484-1.939.997-2.915 1.51m2.257-3.62a1 1 0 011.02.39L14.47 16.5a1 1 0 00.948.684H19a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.14 2.257a12.016 12.016 0 01-1.51 2.915"></path></svg>
-                                    <a href="tel:+34653461083" class="text-dark-text hover:text-accent-text">+34 653 46 10 83</a>
+                                    <!-- **NÚMERO REAL Y TEXTO POR DEFECTO** -->
+                                    <a href="https://wa.me/34653461083?text=Hola,%20me%20pongo%20en%20contacto%20desde%20la%20web%20de%20Villa%20Revoltosa%20para%20consultar%20disponibilidad%20o%20hacer%20una%20pregunta%20rápida." target="_blank" class="text-dark-text hover:text-accent-color">+34 653 46 10 83</a>
                                 </div>
                                 
-                                <!-- Email -->
+                                <!-- Email (AHORA CON MAILTO REAL) -->
                                 <div class="flex items-center space-x-2">
                                     <svg class="w-5 h-5 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.8 5.2a1 1 0 001.2 0L21 8m-2-3H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2z"></path></svg>
-                                    <a href="mailto:lorenacs0105201@gmail.com" class="text-dark-text hover:text-accent-text">lorenacs0105201@gmail.com</a>
+                                    <!-- **CORREO REAL Y ASUNTO** -->
+                                    <a href="mailto:lorenacs0105201@gmail.com?subject=Consulta%20de%20Disponibilidad%20/%20Información%20-%20Villa%20Revoltosa" class="text-dark-text hover:text-accent-color">lorenacs0105201@gmail.com</a>
                                 </div>
 
                                 <!-- Dirección -->
@@ -370,38 +415,42 @@
 
                             <!-- Columna de Formulario (Ocupa más espacio) -->
                             <div class="lg:col-span-2">
-                                <form action="#" method="POST" class="space-y-4">
+                                <!-- Se añade un ID al formulario para el JS -->
+                                <form id="reservation-form" onsubmit="handleReservationSubmit(event)" class="space-y-4">
                                     <!-- Nombre y Email -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <input type="text" name="name" placeholder="Nombre completo" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
-                                        <input type="email" name="email" placeholder="Correo electrónico" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                        <input type="text" id="name" placeholder="Nombre completo" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-color focus:ring-accent-color transition duration-150">
+                                        <input type="email" id="email" placeholder="Correo electrónico" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-color focus:ring-accent-color transition duration-150">
                                     </div>
 
                                     <!-- Teléfono y Código Postal -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <input type="tel" name="phone" placeholder="Teléfono" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
-                                        <input type="text" name="zipcode" placeholder="Código Postal" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                        <input type="tel" id="phone" placeholder="Teléfono" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-color focus:ring-accent-color transition duration-150">
+                                        <input type="text" id="zipcode" placeholder="Código Postal" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-color focus:ring-accent-color transition duration-150">
                                     </div>
 
                                     <!-- Fechas de Interés (usamos inputs de fecha) -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label for="checkin" class="text-sm font-medium text-dark-text">Llegada</label>
-                                            <input type="date" id="checkin" name="checkin" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                            <input type="date" id="checkin" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-color focus:ring-accent-color transition duration-150">
                                         </div>
                                         <div>
                                             <label for="checkout" class="text-sm font-medium text-dark-text">Salida</label>
-                                            <input type="date" id="checkout" name="checkout" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                            <input type="date" id="checkout" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-color focus:ring-accent-color transition duration-150">
                                         </div>
                                     </div>
                                     
                                     <!-- Número de Personas -->
-                                    <input type="number" name="guests" placeholder="Número de personas" min="1" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150">
+                                    <input type="number" id="guests" placeholder="Número de personas" min="1" required class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-color focus:ring-accent-color transition duration-150">
 
                                     <!-- Mensaje Adicional -->
-                                    <textarea name="message" rows="4" placeholder="¿Alguna petición especial?" class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-text focus:ring-accent-text transition duration-150"></textarea>
+                                    <textarea id="message" rows="4" placeholder="¿Alguna petición especial?" class="w-full p-3 border border-gray-300 rounded-lg focus:border-accent-color focus:ring-accent-color transition duration-150"></textarea>
+                                    
+                                    <!-- Mensaje de Estado (Para indicar si se ha enviado) -->
+                                    <div id="form-status" class="hidden p-3 bg-green-100 text-primary-green rounded-lg font-semibold"></div>
 
-                                    <!-- Botón de Envío (Aquí iría la lógica de envío real) -->
+                                    <!-- Botón de Envío (AHORA FUNCIONAL) -->
                                     <button type="submit" class="w-full bg-primary-green text-white px-6 py-3 rounded-lg font-bold text-lg hover:bg-secondary-green transition duration-200 shadow-xl hover:shadow-2xl">
                                         Enviar Solicitud de Reserva
                                     </button>
@@ -415,30 +464,105 @@
 
     </div><!-- Fin del Contenedor Principal de la SPA -->
 
+    <!-- LIGHTBOX/MODAL para visualización de imagen en grande -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-overlay-dark hidden items-center justify-center animate-modalIn" role="dialog" aria-modal="true">
+        <div class="relative flex items-center justify-center w-full h-full">
+            
+            <!-- Botón de Cerrar (Esquina Superior Derecha) -->
+            <button id="lightbox-close" class="absolute top-4 right-4 text-white text-3xl font-light p-2 rounded-full bg-black/30 hover:bg-black/50 transition duration-150" aria-label="Cerrar galería">
+                &times;
+            </button>
+            
+            <!-- Imagen Principal -->
+            <img id="lightbox-image" src="" alt="Imagen de la galería en grande" class="lightbox-image rounded-lg shadow-2xl"/>
+
+            <!-- Flecha Anterior -->
+            <button id="lightbox-prev" class="absolute left-4 p-3 rounded-full text-white text-3xl lightbox-arrow transition duration-150 focus:outline-none focus:ring-4 focus:ring-primary-green">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+
+            <!-- Flecha Siguiente -->
+            <button id="lightbox-next" class="absolute right-4 p-3 rounded-full text-white text-3xl lightbox-arrow transition duration-150 focus:outline-none focus:ring-4 focus:ring-primary-green">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+    </div>
+    <!-- FIN LIGHTBOX -->
+
     <!-- Footer (Parte inferior) -->
     <footer class="bg-light-bg border-t border-gray-200 py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
             <!-- Links del pie de página -->
-            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-8 text-sm mb-6 text-accent-text">
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-8 text-sm mb-6 text-accent-color">
                 <a href="#" class="hover:underline">Política de Privacidad</a>
                 <a href="#" class="hover:underline">Términos de Servicio</a>
                 <a href="#" class="hover:underline">Contacto</a>
             </div>
 
             <!-- Copyright -->
-            <p class="text-sm text-accent-text/70">
+            <p class="text-sm text-accent-color/70">
                 © 2024 Villa Revoltosa. Todos los derechos reservados.
             </p>
         </div>
     </footer>
 
-    <!-- Script para la funcionalidad de la SPA, galería y efectos -->
+    <!-- Script para la funcionalidad de la SPA, galería y Lightbox -->
     <script>
+        // *** CONFIGURACIÓN DE CONTACTO REALES ***
+        const WHATSAPP_NUMBER = '34653461083'; // Número proporcionado: +34 653 46 10 83
+
+        // Función para manejar el envío del formulario a WhatsApp
+        const handleReservationSubmit = (event) => {
+            event.preventDefault(); // Evita el envío tradicional del formulario
+
+            const form = document.getElementById('reservation-form');
+            const statusBox = document.getElementById('form-status');
+
+            // 1. Recopilar datos
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            const guests = document.getElementById('guests').value;
+            const message = document.getElementById('message').value;
+
+            // 2. Construir el mensaje de WhatsApp
+            let whatsappMessage = `*¡Nueva Solicitud de Reserva para Villa Revoltosa!* 🏡\n\n`;
+            whatsappMessage += `👤 *Nombre:* ${name}\n`;
+            whatsappMessage += `📞 *Teléfono:* ${phone}\n`;
+            whatsappMessage += `📧 *Email:* ${email}\n`;
+            whatsappMessage += `\n📅 *Fechas Solicitadas:*\n`;
+            whatsappMessage += `  - *Llegada:* ${checkin}\n`;
+            whatsappMessage += `  - *Salida:* ${checkout}\n`;
+            whatsappMessage += `👥 *Huéspedes:* ${guests} personas\n`;
+            if (message) {
+                whatsappMessage += `\n💬 *Mensaje Adicional:*\n${message}`;
+            }
+            whatsappMessage += `\n_Por favor, confirma la disponibilidad de estas fechas._`;
+
+
+            // 3. Codificar y abrir WhatsApp
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+
+            // 4. Mostrar estado
+            statusBox.textContent = '¡Solicitud preparada! Se abrirá WhatsApp para que la envíes.';
+            statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+            statusBox.classList.add('bg-green-100', 'text-primary-green');
+            statusBox.style.display = 'block';
+
+            // Opcional: Limpiar el formulario después del envío
+            // form.reset(); 
+        };
+
+
         document.addEventListener('DOMContentLoaded', () => {
             
             // --- GESTIÓN DE LA SPA (SINGLE PAGE APPLICATION) ---
-            const appContainer = document.getElementById('app-container');
             const navButtons = document.querySelectorAll('.nav-btn');
             const viewSections = document.querySelectorAll('.view-section');
 
@@ -447,8 +571,8 @@
                 viewSections.forEach(section => {
                     if (section.id === `${targetView}-view`) {
                         section.classList.remove('hidden');
-                        section.classList.add('animate-fadeIn'); // Aplica la animación al mostrar
-                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll al inicio de la vista
+                        section.classList.add('animate-fadeIn'); 
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     } else {
                         section.classList.add('hidden');
                         section.classList.remove('animate-fadeIn');
@@ -458,12 +582,15 @@
                 // Actualizar estilo del botón de navegación
                 navButtons.forEach(btn => {
                     const btnView = btn.getAttribute('data-view');
+                    btn.classList.remove('text-accent-color', 'font-semibold', 'border-b-2', 'border-accent-color', 'pb-1');
+                    btn.classList.add('text-dark-text', 'hover:text-accent-color');
+
                     if (btnView === targetView) {
                         btn.classList.add('text-accent-color', 'font-semibold', 'border-b-2', 'border-accent-color', 'pb-1');
-                        btn.classList.remove('text-dark-text', 'hover:text-accent-text');
-                    } else {
-                        btn.classList.remove('text-accent-color', 'font-semibold', 'border-b-2', 'border-accent-color', 'pb-1');
-                        btn.classList.add('text-dark-text', 'hover:text-accent-text');
+                        btn.classList.remove('text-dark-text', 'hover:text-accent-color');
+                    } 
+                    if (btnView === 'contact') {
+                         btn.classList.remove('border-b-2', 'pb-1');
                     }
                 });
             };
@@ -478,31 +605,48 @@
                 });
             });
 
-            // --- GESTIÓN DE LA GALERÍA (Mantenida) ---
-            const filterGallery = (category) => {
-                const gallery = document.getElementById('photo-gallery');
+            // --- GESTIÓN DE LA GALERÍA (Filtros) ---
+            const gallery = document.getElementById('photo-gallery');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+
+            const filterGallery = (filterCategory) => {
                 if (!gallery) return;
 
-                const items = gallery.querySelectorAll('.gallery-item');
-                items.forEach(item => {
-                    const categories = item.getAttribute('data-category').split(' ');
+                console.log(`[GALERÍA] Filtro seleccionado: "${filterCategory}"`);
+
+                galleryItems.forEach((item) => {
+                    const itemCategoriesAttribute = item.getAttribute('data-category');
+                    const itemCategories = itemCategoriesAttribute ? itemCategoriesAttribute.split(/\s+/) : [];
+                    
                     item.classList.remove('animate-fadeIn'); 
                     
-                    if (category === 'Todos' || categories.includes(category.toLowerCase())) {
+                    let shouldShow = false;
+                    if (filterCategory === 'all') {
+                        shouldShow = true;
+                    } else {
+                        // Comprobación de si *alguna* de las categorías del ítem incluye la categoría de filtro
+                        shouldShow = itemCategories.some(cat => cat.includes(filterCategory));
+                    }
+                    
+                    if (shouldShow) {
                         item.classList.remove('hidden');
-                        void item.offsetWidth; // Truco para forzar el reflow y reiniciar la animación
+                        void item.offsetWidth; 
                         item.classList.add('animate-fadeIn'); 
                     } else {
                         item.classList.add('hidden');
                     }
                 });
+                
+                // Actualiza la lista de elementos visibles para el Lightbox
+                updateVisibleItems();
+                console.log("[GALERÍA] Proceso de filtrado completado.");
             };
 
             // Manejar los clics de los botones de filtro
-            const filterButtons = document.querySelectorAll('.filter-btn');
             filterButtons.forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const category = e.target.textContent.trim();
+                    const filterValue = e.target.getAttribute('data-filter');
                     
                     // Actualiza el estado activo del botón de filtro
                     filterButtons.forEach(btn => {
@@ -513,18 +657,113 @@
                     e.target.classList.remove('text-dark-text', 'hover:text-accent-color');
 
                     // Aplica el filtro
-                    filterGallery(category);
+                    filterGallery(filterValue);
                 });
             });
-            
-            // Función para hacer scroll directo (ya no es necesaria con la SPA, pero se mantiene como backup)
-            window.scrollToContact = () => switchView('contact');
 
+            // --- GESTIÓN DEL LIGHTBOX (Modal) ---
+            const lightboxModal = document.getElementById('lightbox-modal');
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxClose = document.getElementById('lightbox-close');
+            const lightboxPrev = document.getElementById('lightbox-prev');
+            const lightboxNext = document.getElementById('lightbox-next');
+            let visibleItems = []; // Array de elementos de la galería que están visibles actualmente
+            let currentIndex = 0;
+
+            // Función para actualizar la lista de elementos visibles (después del filtro)
+            const updateVisibleItems = () => {
+                visibleItems = Array.from(gallery.querySelectorAll('.gallery-item:not(.hidden)'));
+            };
+
+            // Abre el Lightbox con una imagen específica
+            const openLightbox = (itemElement) => {
+                const src = itemElement.getAttribute('data-full-image');
+                const alt = itemElement.querySelector('img').alt;
+
+                if (!src) return;
+
+                // 1. Encontrar el índice en la lista de items visibles
+                currentIndex = visibleItems.indexOf(itemElement);
+
+                // 2. Cargar la imagen y mostrar el modal
+                lightboxImage.src = src;
+                lightboxImage.alt = alt;
+                lightboxModal.classList.remove('hidden');
+                lightboxModal.classList.add('flex');
+            };
+
+            // Cierra el Lightbox
+            const closeLightbox = () => {
+                lightboxModal.classList.remove('flex');
+                lightboxModal.classList.add('hidden');
+            };
+
+            // Muestra la imagen anterior o siguiente
+            const navigate = (direction) => {
+                // Dirección: +1 (siguiente) o -1 (anterior)
+                currentIndex += direction;
+
+                // Manejar el bucle (circular)
+                if (currentIndex < 0) {
+                    currentIndex = visibleItems.length - 1;
+                } else if (currentIndex >= visibleItems.length) {
+                    currentIndex = 0;
+                }
+
+                // Cargar la nueva imagen
+                const nextItem = visibleItems[currentIndex];
+                if (nextItem) {
+                    const src = nextItem.getAttribute('data-full-image');
+                    const alt = nextItem.querySelector('img').alt;
+                    
+                    // Efecto de fade (desaparecer y aparecer)
+                    lightboxImage.style.opacity = '0';
+                    setTimeout(() => {
+                        lightboxImage.src = src;
+                        lightboxImage.alt = alt;
+                        lightboxImage.style.opacity = '1';
+                    }, 150);
+                }
+            };
+            
+            // Event Listeners para abrir el Lightbox
+            galleryItems.forEach(item => {
+                item.addEventListener('click', () => openLightbox(item));
+            });
+            
+            // Event Listeners para el Lightbox
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightboxPrev.addEventListener('click', () => navigate(-1));
+            lightboxNext.addEventListener('click', () => navigate(1));
+
+            // Cerrar al hacer clic en el fondo oscuro
+            lightboxModal.addEventListener('click', (e) => {
+                // Solo cerrar si el clic fue directamente en el modal (no en la imagen o flechas)
+                if (e.target === lightboxModal) {
+                    closeLightbox();
+                }
+            });
+
+            // Cerrar con la tecla ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && lightboxModal.classList.contains('flex')) {
+                    closeLightbox();
+                }
+                // Navegar con teclas de flecha
+                if (lightboxModal.classList.contains('flex')) {
+                     if (e.key === 'ArrowLeft') {
+                        navigate(-1);
+                    } else if (e.key === 'ArrowRight') {
+                        navigate(1);
+                    }
+                }
+            });
+            
             // --- INICIALIZACIÓN ---
-            // Muestra la vista 'home' por defecto al cargar
             switchView('home'); 
-            // Asegura que el filtro de la galería esté en 'Todos' al iniciar
-            filterGallery('Todos');
+            // Inicializa la lista de items visibles y aplica el filtro "Todos"
+            filterGallery('all'); 
+            updateVisibleItems(); 
         });
     </script>
 </body>
